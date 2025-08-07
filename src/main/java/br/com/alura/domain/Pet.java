@@ -11,10 +11,31 @@ public class Pet {
         this.peso = peso;
     }
 
+    private Long id;
     private String tipo;
     private String nome;
     private String raca;
     private int idade;
     private String cor;
     private float peso;
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getRaca() {
+        return raca;
+    }
+
+    public int getIdade() {
+        return idade;
+    }
 }
