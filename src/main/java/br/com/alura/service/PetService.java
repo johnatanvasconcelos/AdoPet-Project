@@ -1,6 +1,7 @@
 package br.com.alura.service;
 
 import br.com.alura.client.ClientHttpConfiguration;
+import br.com.alura.domain.Pet;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -33,9 +34,11 @@ public class PetService {
         if (statusCode == 404 || statusCode == 500) {
             System.out.println("ID ou nome não cadastrado!");
         }
+
         String responseBody = response.body();
         JsonArray jsonArray = JsonParser.parseString(responseBody).getAsJsonArray();
         System.out.println("Pets cadastrados:");
+
         for (JsonElement element : jsonArray) {
             JsonObject jsonObject = element.getAsJsonObject();
             long id = jsonObject.get("id").getAsLong();
@@ -66,22 +69,15 @@ public class PetService {
             String tipo = campos[0];
             String nome = campos[1];
             String raca = campos[2];
-
             int idade = Integer.parseInt(campos[3]);
             String cor = campos[4];
             Float peso = Float.parseFloat(campos[5]);
 
-            JsonObject json = new JsonObject();
-            json.addProperty("tipo", tipo.toUpperCase());
-            json.addProperty("nome", nome);
-            json.addProperty("raca", raca);
-            json.addProperty("idade", idade);
-            json.addProperty("cor", cor);
-            json.addProperty("peso", peso);
+            Pet pet = new Pet(tipo, nome, raca, idade, cor, peso);
 
             String uri = "http://localhost:8080/abrigos/" + idOuNome + "/pets";
 
-            HttpResponse<String> response = client.dispararReqisicaoPost(uri, json);
+            HttpResponse<String> response = client.dispararReqisicaoPost(uri, pet);
 
             int statusCode = response.statusCode();
 
