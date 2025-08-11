@@ -1,7 +1,7 @@
-package br.com.alura.service;
+package br.com.javapet.api.service;
 
-import br.com.alura.client.ClientHttpConfiguration;
-import br.com.alura.domain.Abrigo;
+import br.com.javapet.api.client.ClientHttpConfiguration;
+import br.com.javapet.api.domain.Abrigo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

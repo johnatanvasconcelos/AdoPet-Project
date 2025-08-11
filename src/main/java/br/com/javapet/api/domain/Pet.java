@@ -1,4 +1,4 @@
-package br.com.alura.domain;
+package br.com.javapet.api.domain;
 
 public class Pet {
 

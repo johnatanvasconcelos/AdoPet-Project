@@ -9,8 +9,8 @@
         <version>3.4.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>br.com.alura</groupId>
-    <artifactId>adopet-console</artifactId>
+    <groupId>br.com.javapet</groupId>
+    <artifactId>javapet-api</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>petjava</name>
     <description>Petshop API com Spring Boot</description>
