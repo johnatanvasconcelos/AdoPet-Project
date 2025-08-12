@@ -1,6 +1,24 @@
 package br.com.javapet.api.domain;
 
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "abrigos")
 public class Abrigo {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String nome;
+    private String telefone;
+    private String email;
+
+    @OneToMany(mappedBy = "abrigo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Pet> pets = new ArrayList<>();
 
     public Abrigo(){
     }
@@ -10,12 +28,6 @@ public class Abrigo {
         this.telefone = telefone;
         this.email = email;
     }
-
-    private Long id;
-    private String nome;
-    private String telefone;
-    private String email;
-    private Pet[] pets;
 
     public Long getId() {
         return id;
@@ -33,18 +45,7 @@ public class Abrigo {
         return email;
     }
 
-    public Pet[] getPets() {
+    public List<Pet> getPets() {
         return pets;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Override
-    public String toString() {
-        return """
-                     "id":%s,"nome":"%s","telefone":"%s","email":"%s"
-                     """.formatted(this.id, this.nome, this.telefone, this.email);
     }
 }

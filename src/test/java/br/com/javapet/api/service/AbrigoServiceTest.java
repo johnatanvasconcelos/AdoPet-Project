@@ -1,67 +1,55 @@
 package br.com.javapet.api.service;
 
-import br.com.javapet.api.client.ClientHttpConfiguration;
 import br.com.javapet.api.domain.Abrigo;
+import br.com.javapet.api.repository.AbrigoRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import java.util.Collections;
+import java.util.List;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.net.http.HttpResponse;
+import static org.mockito.Mockito.*;
 
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
+@ExtendWith(MockitoExtension.class)
 public class AbrigoServiceTest {
 
-    private ClientHttpConfiguration client = mock(ClientHttpConfiguration.class);
-    private AbrigoService abrigoService = new AbrigoService(client);
-    private HttpResponse<String> response = mock(HttpResponse.class);
-    private Abrigo abrigo = new Abrigo("Teste", "61981880392", "abrigo_alura@gmail.com");
+    @InjectMocks
+    private AbrigoService abrigoService;
+
+    @Mock
+    private AbrigoRepository abrigoRepository;
 
     @Test
-    public void deveVerificarQuandoHaAbrigo() throws IOException, InterruptedException {
-        abrigo.setId(0L);
-        String expectedAbrigosCadastrados = "Abrigos cadastrados:";
-        String expectedIdENome = "0 - Teste";
+    public void deveRetornarListaDeAbrigosQuandoHouverAbrigos(){
+        Abrigo abrigo = new Abrigo("Abrigo teste", "11999998888", "abrigoteste@email.com");
+        List<Abrigo> listaEsperada = List.of(abrigo);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        PrintStream printStream = new PrintStream(baos);
-        System.setOut(printStream);
+        when(abrigoRepository.findAll()).thenReturn(listaEsperada);
 
-        when(response.body()).thenReturn("[{"+abrigo.toString()+"}]");
-        when(client.dispararRequisicaoGet(anyString())).thenReturn(response);
+        List<Abrigo> listaRetornada = abrigoService.listar();
 
-        abrigoService.listarAbrigo();
-
-        String[] lines = baos.toString().split(System.lineSeparator());
-        String actualAbrigosCadastrados = lines[0];
-        String actualIdENome = lines[1];
-
-        Assertions.assertEquals(expectedAbrigosCadastrados, actualAbrigosCadastrados);
-        Assertions.assertEquals(expectedIdENome, actualIdENome);
+        Assertions.assertEquals(listaEsperada, listaRetornada);
     }
 
     @Test
-    public void deveVerificarQuandoNaoHaAbrigo() throws IOException, InterruptedException {
-        abrigo.setId(0L);
-        String expected = "Não há abrigos cadastrados";
+    public void deveRetornarListaVaziaQuandoNaoHouverAbrigos() {
+        when(abrigoRepository.findAll()).thenReturn(Collections.emptyList());
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        PrintStream printStream = new PrintStream(baos);
-        System.setOut(printStream);
+        List<Abrigo> listaRetornada = abrigoService.listar();
 
-        when(response.body()).thenReturn("[]");
-        when(client.dispararRequisicaoGet(anyString())).thenReturn(response);
 
-        abrigoService.listarAbrigo();
+        Assertions.assertTrue(listaRetornada.isEmpty());
+    }
 
-        String[] lines = baos.toString().split(System.lineSeparator());
-        String actual = lines[0];
+    @Test
+    public void deveChamarMetodoSaveDoRepositorioAoCadastrar(){
+        Abrigo abrigoParaCadastrar = new Abrigo("Abrigo Novo", "21988887777", "novoteste@email.com");
 
-        Assertions.assertEquals(expected, actual);
+        abrigoService.cadastrar(abrigoParaCadastrar);
 
+        verify(abrigoRepository, times(1)).save(abrigoParaCadastrar);
     }
 }
