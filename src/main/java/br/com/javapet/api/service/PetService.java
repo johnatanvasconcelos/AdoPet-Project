@@ -1,6 +1,7 @@
 package br.com.javapet.api.service;
 
 import br.com.javapet.api.domain.Pet;
+import br.com.javapet.api.exception.ResourceNotFoundException;
 import br.com.javapet.api.repository.AbrigoRepository;
 import br.com.javapet.api.repository.PetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class PetService {
 
     public List<Pet> listarPorAbrigo(Long abrigoId){
         abrigoRepository.findById(abrigoId)
-                .orElseThrow(() -> new RuntimeException("Abrigo não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Abrigo com id " + abrigoId + " não encontrado"));
         return petRepository.findByAbrigoId(abrigoId);
     }
 }

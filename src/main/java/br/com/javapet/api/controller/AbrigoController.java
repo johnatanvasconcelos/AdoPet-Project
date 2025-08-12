@@ -27,23 +27,14 @@ public class AbrigoController {
 
     @PostMapping
     public ResponseEntity<String> cadastrar(@RequestBody Abrigo abrigo){
-        try {
             abrigoService.cadastrar(abrigo);
             return ResponseEntity.ok("Abrigo cadastrado com sucesso!");
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
     }
 
     @GetMapping("/{abrigoId}/pets")
     public ResponseEntity<List<Pet>> listarPetsPorAbrigo(@PathVariable Long abrigoId){
-        try{
             List<Pet> pets = petService.listarPorAbrigo(abrigoId);
             return ResponseEntity.ok(pets);
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
 
     }
-
 }
