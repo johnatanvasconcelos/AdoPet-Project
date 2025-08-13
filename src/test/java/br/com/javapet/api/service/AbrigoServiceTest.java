@@ -1,6 +1,9 @@
 package br.com.javapet.api.service;
 
 import br.com.javapet.api.domain.Abrigo;
+import br.com.javapet.api.dto.AbrigoRequest;
+import br.com.javapet.api.dto.AbrigoResponse;
+import br.com.javapet.api.mapper.AbrigoMapper;
 import br.com.javapet.api.repository.AbrigoRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -22,34 +25,53 @@ public class AbrigoServiceTest {
     @Mock
     private AbrigoRepository abrigoRepository;
 
+    @Mock
+    private AbrigoMapper abrigoMapper;
+
     @Test
     public void deveRetornarListaDeAbrigosQuandoHouverAbrigos(){
+        //Arrange
         Abrigo abrigo = new Abrigo("Abrigo teste", "11999998888", "abrigoteste@email.com");
-        List<Abrigo> listaEsperada = List.of(abrigo);
+        List<Abrigo> listaAbrigos = List.of(abrigo);
 
-        when(abrigoRepository.findAll()).thenReturn(listaEsperada);
+        AbrigoResponse abrigoResponse = new AbrigoResponse(null, "Abrigo Teste", "11999998888", "teste@email.com");
+        List<AbrigoResponse> listaDeResponseEsperada = List.of(abrigoResponse);
 
-        List<Abrigo> listaRetornada = abrigoService.listar();
+        when(abrigoRepository.findAll()).thenReturn(listaAbrigos);
+        when(abrigoMapper.toResponseList(listaAbrigos)).thenReturn(listaDeResponseEsperada);
 
-        Assertions.assertEquals(listaEsperada, listaRetornada);
+        //Act
+        List<AbrigoResponse> resultado = abrigoService.listar();
+
+        //Assert
+        Assertions.assertEquals(listaDeResponseEsperada, resultado);
+
+        verify(abrigoRepository).findAll();
+        verify(abrigoMapper).toResponseList(listaAbrigos);
     }
 
     @Test
     public void deveRetornarListaVaziaQuandoNaoHouverAbrigos() {
         when(abrigoRepository.findAll()).thenReturn(Collections.emptyList());
+        when(abrigoMapper.toResponseList(Collections.emptyList())).thenReturn(Collections.emptyList());
 
-        List<Abrigo> listaRetornada = abrigoService.listar();
+        List<AbrigoResponse> resultado = abrigoService.listar();
 
+        Assertions.assertTrue(resultado.isEmpty());
 
-        Assertions.assertTrue(listaRetornada.isEmpty());
+        verify(abrigoRepository).findAll();
+        verify(abrigoMapper).toResponseList(Collections.emptyList());
     }
 
     @Test
     public void deveChamarMetodoSaveDoRepositorioAoCadastrar(){
-        Abrigo abrigoParaCadastrar = new Abrigo("Abrigo Novo", "21988887777", "novoteste@email.com");
+        AbrigoRequest abrigoRequest = new AbrigoRequest("Abrigo Novo", "21988887777", "novoteste@email.com");
+        Abrigo abrigoMapeado = new Abrigo("Abrigo Novo", "21988887777", "novoteste@email.com");
 
-        abrigoService.cadastrar(abrigoParaCadastrar);
+        when(abrigoMapper.toEntity(abrigoRequest)).thenReturn(abrigoMapeado);
 
-        verify(abrigoRepository, times(1)).save(abrigoParaCadastrar);
+        abrigoService.cadastrar(abrigoRequest);
+
+        verify(abrigoRepository).save(abrigoMapeado);
     }
 }
