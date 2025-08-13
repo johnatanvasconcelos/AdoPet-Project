@@ -4,6 +4,7 @@ import br.com.javapet.api.domain.Abrigo;
 import br.com.javapet.api.domain.Pet;
 import br.com.javapet.api.service.AbrigoService;
 import br.com.javapet.api.service.PetService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class AbrigoController {
     }
 
     @PostMapping
-    public ResponseEntity<String> cadastrar(@RequestBody Abrigo abrigo){
+    public ResponseEntity<String> cadastrar(@RequestBody @Valid Abrigo abrigo){
             abrigoService.cadastrar(abrigo);
             return ResponseEntity.ok("Abrigo cadastrado com sucesso!");
     }
