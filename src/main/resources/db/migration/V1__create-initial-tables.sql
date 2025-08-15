@@ -1,0 +1,19 @@
+CREATE TABLE abrigos (
+    id BIGSERIAL PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    telefone VARCHAR(20) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE
+);
+
+CREATE TABLE pets (
+    id BIGSERIAL PRIMARY KEY,
+    tipo VARCHAR(100) NOT NULL,
+    nome VARCHAR(100) NOT NULL,
+    raca VARCHAR(100) NOT NULL,
+    idade INTEGER NOT NULL,
+    cor VARCHAR(50) NOT NULL,
+    peso REAL NOT NULL,
+    adotado BOOLEAN NOT NULL DEFAULT FALSE,
+    abrigo_id BIGINT NOT NULL,
+    CONSTRAINT fk_pets_abrigos FOREIGN KEY (abrigo_id) REFERENCES abrigos(id)
+);

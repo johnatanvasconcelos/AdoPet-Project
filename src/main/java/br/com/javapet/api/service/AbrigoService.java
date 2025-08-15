@@ -3,6 +3,7 @@ package br.com.javapet.api.service;
 import br.com.javapet.api.domain.Abrigo;
 import br.com.javapet.api.dto.AbrigoRequest;
 import br.com.javapet.api.dto.AbrigoResponse;
+import br.com.javapet.api.exception.ResourceNotFoundException;
 import br.com.javapet.api.mapper.AbrigoMapper;
 import br.com.javapet.api.repository.AbrigoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,5 +29,11 @@ public class AbrigoService {
     public void cadastrar(AbrigoRequest abrigoRequest) {
         Abrigo abrigo = abrigoMapper.toEntity(abrigoRequest);
         abrigoRepository.save(abrigo);
+    }
+
+    public AbrigoResponse buscarAbrigo (Long id){
+        Abrigo abrigo = abrigoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Abrigo não encontrado"));
+        return abrigoMapper.toResponse(abrigo);
     }
 }

@@ -39,6 +39,11 @@ public class AbrigoController {
     public ResponseEntity<List<Pet>> listarPetsPorAbrigo(@PathVariable Long abrigoId){
             List<Pet> pets = petService.listarPorAbrigo(abrigoId);
             return ResponseEntity.ok(pets);
+    }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<AbrigoResponse> buscarAbrigo(@PathVariable Long id){
+        AbrigoResponse abrigoResponse = abrigoService.buscarAbrigo(id);
+        return ResponseEntity.ok(abrigoResponse);
     }
 }
